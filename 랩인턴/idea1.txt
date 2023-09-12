@@ -1,0 +1,64 @@
+/*
+        int x = check(n-1);
+        //at 2^k + 1
+        if(n == pow(2,x-1) + 1){
+            return;
+        }
+
+        //not 2^k + 1
+        int bc = pow(2,x-1); //block count
+        int bs = (n-1)/bc; //block size = 2*k+1
+        int bg = bs/2; //block group = k
+        dp(bc);//need (bc,2) (bc+1,2)
+        dp(bc+1);
+        dp(bs); //need (bs,2)
+
+        int d = bc/2; //d개씩 묶임
+        for(int i=0; i<bc; i++){ //Left
+            for(int j=0; j<bs; j++){ //A' or B' or C'
+                for(int l=0; l<d; l++){ //(bc+1,2) i th -> AA
+                    int xx = n2[bc+1][i*d+l].first;
+                    int yy = n2[bc+1][i*d+l].second;
+                    xx = (xx - (xx > d)) * bs + (xx > d) + j*(xx != d);
+                    yy = (yy - (yy > d)) * bs + (yy > d) + j*(yy != d);
+
+                    tmp.push_back(make_pair(xx,yy));
+                }
+                if(i == d) continue;
+                for(int k=0; k<bg; k++){
+                    int x = n2[bs][j*bg+k].first;
+                    int y = n2[bs][j*bg+k].second; //A' can make with (x,y)
+
+                    for(int l=0; l<d; l++){ //(bc,2) i th -> A'A'
+                        int xx = n2[bc][(i - (i > d))*d+l].first;
+                        int yy = n2[bc][(i - (i > d))*d+l].second;
+                        xx = bs*xx + (xx >= d);
+                        yy = bs*yy + (yy >= d);
+
+                        tmp.push_back(make_pair(xx+x,yy+y));
+                        tmp.push_back(make_pair(xx+y,yy+x));
+                    }
+                }
+            }
+        }
+        // use (bc+1,2) bc th to make last one
+        for(int i=0; i<bs; i++){ // A or B or C
+            for(int j=0; j<bc; j++){ // block, make (11)(0)(0) ...
+                int pos = j * bs + (j >= d);
+                for(int k=0; k<bg; k++){
+                    int x = n2[bs][bg*i+k].first;
+                    int y = n2[bs][bg*i+k].second; //(x,y) - > A'
+                    tmp.push_back(make_pair(pos+x,pos+y));
+                }
+            }
+            for(int l=0; l<d; l++){ //(bc+1,2) bc th -> AA
+                int xx = n2[bc+1][bc*d+l].first;
+                int yy = n2[bc+1][bc*d+l].second;
+                xx = (xx - (xx > d)) * bs + (xx > d) + i*(xx != d);
+                yy = (yy - (yy > d)) * bs + (yy > d) + i*(yy != d);
+                tmp.push_back(make_pair(xx,yy));
+            }
+        }
+        n2[n] = tmp;
+        return;
+        */
