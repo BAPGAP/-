@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1693735000 source:c:\users\kas12\onedrive\바탕 화면\한양대\calab\1800\main.cpp
+	<iostream>
+	<queue>
+	<vector>
+	<algorithm>
+
