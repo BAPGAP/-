@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1637994801 source:c:\users\kas12\onedrive\πŸ≈¡ »≠∏È\hcpc\h\main.cpp
+	<iostream>
+	<vector>
+	<algorithm>
+	<cstring>
+	<climits>
+
