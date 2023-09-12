@@ -1,0 +1,24 @@
+tmp = []
+with open("fitdata3.dat", "r") as f:
+    while True:
+        s = f.readline()
+        if not s:
+            break
+        tmp.append(s.split())
+n = len(tmp)
+print("n = ",n)
+x,y,f,g,xy,xx,yy,xf,yf,xg,yg = 0,0,0,0,0,0,0,0,0,0,0
+for s in tmp:
+    x_tmp, y_tmp, f_tmp, g_tmp = float(s[0]), float(s[1]),float(s[2]),float(s[3])
+    x += x_tmp
+    y += y_tmp
+    f += f_tmp
+    g += g_tmp
+    xy += x_tmp * y_tmp
+    xx += x_tmp * x_tmp
+    yy += y_tmp * y_tmp
+    xf += x_tmp * f_tmp
+    yf += y_tmp * f_tmp
+    xg += x_tmp * g_tmp
+    yg += y_tmp * g_tmp
+print(" x: ",x,"\n","y: ",y,"\n","f: ",f,"\n","g: ",g,"\n","xy: ",xy,"\n","xx: ",xx,"\n","yy: ",yy,"\n","xf: ",xf,"\n","yf: ",yf,"\n","xg: ",xg,"\n","yg: ",yg,"\n")

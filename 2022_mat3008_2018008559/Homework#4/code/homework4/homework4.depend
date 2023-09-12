@@ -1,0 +1,29 @@
+# depslib dependency file v1.0
+1667646123 source:c:\users\kas12\onedrive\바탕 화면\한양대\3학년 2학기\수치해석\2022_mat3008_2018008559\homework#4\code\homework4\main.cpp
+	<iostream>
+	<cmath>
+	"nr.h"
+
+1662649314 c:\users\kas12\onedrive\바탕 화면\한양대\3학년 2학기\수치해석\2022_mat3008_2018008559\homework#4\code\homework4\nr.h
+	<fstream>
+	<complex>
+	"nrutil.h"
+	"nrtypes.h"
+
+1662649314 c:\users\kas12\onedrive\바탕 화면\한양대\3학년 2학기\수치해석\2022_mat3008_2018008559\homework#4\code\homework4\nrutil.h
+	"nrutil_nr.h"
+
+1662649315 c:\users\kas12\onedrive\바탕 화면\한양대\3학년 2학기\수치해석\2022_mat3008_2018008559\homework#4\code\homework4\nrutil_nr.h
+	<string>
+	<cmath>
+	<complex>
+	<iostream>
+
+1662649314 c:\users\kas12\onedrive\바탕 화면\한양대\3학년 2학기\수치해석\2022_mat3008_2018008559\homework#4\code\homework4\nrtypes.h
+	"nrtypes_nr.h"
+
+1662649314 c:\users\kas12\onedrive\바탕 화면\한양대\3학년 2학기\수치해석\2022_mat3008_2018008559\homework#4\code\homework4\nrtypes_nr.h
+	<complex>
+	<fstream>
+	"nrutil.h"
+

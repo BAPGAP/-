@@ -1,0 +1,30 @@
+from PIL import Image
+import numpy as np
+import math
+
+im = Image.open("simple.jpg")
+pix = np.array(im)
+im.show()
+h, w = 3067, 5452
+#resize
+n, m = 100, 100
+answer = np.zeros([n, m, 3], dtype=np.uint8)
+
+for i in range(n):
+    for j in range(m):
+        x, y = (h-1)*i/(n-1), (w-1)*j/(m-1)
+        x1, x2 = math.floor(x), math.ceil(x)
+        y1, y2 = math.floor(y), math.ceil(y)
+        
+        xx = (x-x1)/(x2-x1) if x1 != x2 else 0
+        yy = (y-y1)/(y2-y1) if y1 != y2 else 0
+    
+        a = pix[x1][y1]
+        b = pix[x1][y2]
+        c = pix[x2][y2]
+        d = pix[x2][y1]
+        
+        answer[i][j] = (1-xx)*(1-yy)*a + (1-xx)*yy*b + xx*yy*c + xx*(1-yy)*d
+        
+image = Image.fromarray(answer,"RGB")
+image.show()
