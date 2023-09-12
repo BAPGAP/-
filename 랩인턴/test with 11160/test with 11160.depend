@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1660096702 source:c:\users\kas12\onedrive\πŸ≈¡ »≠∏È\∑¶¿Œ≈œ\test with 11160\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<vector>
+	<cmath>
+	<random>
+	<algorithm>
+

@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1662389839 source:c:\users\kas12\onedrive\바탕 화면\한양대\랩인턴\디코드\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<vector>
+	<cmath>
+	<random>
+	<algorithm>
+

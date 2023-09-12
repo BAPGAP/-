@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1662449936 source:c:\users\kas12\onedrive\바탕 화면\한양대\랩인턴\t4\main.cpp
+	<iostream>
+	<vector>
+	<fstream>
+
