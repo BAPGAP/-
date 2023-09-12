@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1663576791 source:c:\users\kas12\onedrive\바탕 화면\한양대\랩인턴\11160 정렬하기\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<vector>
+	<cmath>
+	<random>
+	<algorithm>
+	<time.h>
+	<string>
+	<chrono>
+
