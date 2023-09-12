@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1624609318 source:c:\users\kas12\onedrive\바탕 화면\scpc\캠퍼스와 도로 2\main.cpp
+	<iostream>
+	<algorithm>
+	<vector>
+	<utility>
+	<queue>
+
