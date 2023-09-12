@@ -1,0 +1,250 @@
+import mysql.connector
+
+# TODO: REPLACE THE VALUE OF VARIABLE team (EX. TEAM 1 --> team = 1)
+team = 2
+
+
+# Requirement1: create schema ( name: DMA_team## )
+def requirement1(host, user, password):
+    cnx = mysql.connector.connect(host=host, user=user, password=password)
+    cursor = cnx.cursor()
+    cursor.execute('SET GLOBAL innodb_buffer_pool_size=2*1024*1024*1024;')
+
+    # TODO: WRITE CODE HERE
+    print('Creating schema...')
+    cursor.execute('DROP DATABASE IF EXISTS DMA_team%02d;' % team)
+    cursor.execute('CREATE DATABASE IF NOT EXISTS DMA_team%02d;' % team)
+    print('done')
+    # TODO: WRITE CODE HERE
+    cursor.close()
+
+
+# Requierement2: create table
+def requirement2(host, user, password):
+    cnx = mysql.connector.connect(host=host, user=user, password=password)
+    cursor = cnx.cursor()
+    cursor.execute('SET GLOBAL innodb_buffer_pool_size=2*1024*1024*1024;')
+
+    # TODO: WRITE CODE HERE
+    cursor.execute('USE DMA_team%02d;' % team)
+    print('creating tables')
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS business(
+    business_id INT(11) NOT NULL ,
+    active VARCHAR(255) DEFAULT 'NULL', 
+    city VARCHAR(255) DEFAULT 'NULL', 
+    state_name VARCHAR(255) DEFAULT 'NULL',
+    stars DOUBLE DEFAULT '0',
+    review_count VARCHAR(255) DEFAULT 'NULL',
+    PRIMARY KEY (business_id) );
+    ''')
+    
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS attributes(
+    attribute_id INT(11) NOT NULL ,
+    attribute_name VARCHAR(255), 
+    PRIMARY KEY ( attribute_id) );
+    ''')
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS business_attributes(
+    attribute_id INT(11) NOT NULL ,
+    business_id INT(11) NOT NULL ,
+    attribute_value VARCHAR(255) DEFAULT 'NULL',
+    PRIMARY KEY (business_id, attribute_id) );
+    ''')
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS categories(
+    category_id INT(11) NOT NULL ,
+    category_name VARCHAR(255) DEFAULT 'NULL', 
+    PRIMARY KEY (category_id) );
+    ''')
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS business_categories(
+    business_id INT(11) NOT NULL ,
+    category_id INT(11) NOT NULL ,
+    PRIMARY KEY (business_id, category_id) );
+    ''')
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS days(
+    day_id INT(11) NOT NULL DEFAULT '0',
+    day_of_week  VARCHAR(255) NOT NULL,
+    PRIMARY KEY (day_id) );
+    ''')
+
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS business_hours(
+    business_id INT(11) NOT NULL,
+    day_id INT(11) NOT NULL ,
+    opening_time VARCHAR(255) DEFAULT 'NULL',
+    closing_time VARCHAR(255) DEFAULT 'NULL',
+    PRIMARY KEY (business_id, day_id) );
+    ''')
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS users(
+    user_id INT(11) NOT NULL ,
+    user_yelping_since_year INT(11),
+    user_average_stars DOUBLE DEFAULT '0',
+    user_votes_funny INT(11) DEFAULT '0',
+    user_votes_useful INT(11) DEFAULT '0',
+    user_votes_cool INT(11) DEFAULT '0',
+    user_fans INT(11) DEFAULT '0',
+    PRIMARY KEY (user_id) );
+    ''')
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS reviews(
+    review_id INT(11) NOT NULL,
+    business_id INT(11) NOT NULL DEFAULT '0',
+    user_id INT(11) NOT NULL DEFAULT '0',
+    review_stars INT(11) DEFAULT '0',
+    review__votes_funny VARCHAR(255) DEFAULT 'NULL',
+    review__votes_useful VARCHAR(255) DEFAULT 'NULL',
+    review__votes_cool VARCHAR(255) DEFAULT 'NULL',
+    review_length VARCHAR(255) DEFAULT 'NULL',
+    PRIMARY KEY (review_id) );
+    ''')
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS compliments(
+    compliment_id INT(11) NOT NULL ,
+    compliment_type VARCHAR(255) DEFAULT 'NULL',
+    PRIMARY KEY (compliment_id) );
+    ''')
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS users_compliments(
+    compliment_id INT(11) NOT NULL ,
+    user_id INT(11) NOT NULL DEFAULT '0',
+    number_of_compliments VARCHAR(255) DEFAULT 'NULL',
+    PRIMARY KEY (user_id, compliment_id) );
+    ''')
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS years(
+    year_id INT(11) NOT NULL ,
+    actual_year VARCHAR(255) DEFAULT 'NULL',
+    PRIMARY KEY (year_id) );
+    ''')
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS elite(
+    user_id INT(11) NOT NULL ,
+    year_id INT(11) NOT NULL ,
+    PRIMARY KEY (user_id, year_id) );
+    ''')
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS tips(
+    business_id INT(11) NOT NULL ,
+    user_id INT(11) NOT NULL ,
+    likes INT(11) DEFAULT '0',
+    tip_length VARCHAR(255) DEFAULT 'NULL',
+    PRIMARY KEY (user_id, business_id) );
+    ''')
+
+
+    # TODO: WRITE CODE HERE
+    cursor.close()
+    print('done')
+
+# Requirement3: insert data
+def requirement3(host, user, password, directory):
+    cnx = mysql.connector.connect(host=host, user=user, password=password)
+    cursor = cnx.cursor()
+    cursor.execute('SET GLOBAL innodb_buffer_pool_size=2*1024*1024*1024;')
+    # TODO: WRITE CODE HERE
+    dict={}
+    dict['attributes']=[int,str]
+    dict['business']=[int, bool, str, str, float, str]
+    dict['attributes']=[int, str]
+    dict['business_attributes']=[int,int,str]
+    dict['business_categories']=[int, int]
+    dict['business_hours']=[int, int, str, str]
+    dict['catergories']=[int,str]
+    dict['compliments']=[int, str]
+    dict['days']=[int, str]
+    dict['elite']=[int,int]
+    dict['review']=[int,int,int,int,str,str,str,str]
+    dict['tips']=[int,int,int,str]
+    dict['users']=[int,int,float,int,int,int,int,int]
+    dict['users_compliments']=[int,int,str]
+    dict['years']=[int,int]
+    for key in dict:
+        filepath = directory + '\\' + key+'.csv'
+        with open(filepath, 'r', encoding='utf-8') as csv_data:
+            for row in csv_data.readlines()[1:]:
+                row = row.strip().split(',')
+                for i, data in enumerate(row):
+                    data.st
+                    if data=='':
+                        row[i]='null'
+                    else:
+                        row[i]=dict[key][i](row[i])
+                row = tuple(row)
+                sql = 'INSERT INTO '+key.upper()+ ' VALUES {};'.format(row)
+                sql=sql.replace('\'null\'','null')
+                cursor.execute(sql)
+        cursor.commit()
+
+    # TODO: WRITE CODE HERE
+    cursor.close()
+
+
+# Requirement4: add constraint (foreign key)
+def requirement4(host, user, password):
+    cnx = mysql.connector.connect(host=host, user=user, password=password)
+    cursor = cnx.cursor()
+    cursor.execute('SET GLOBAL innodb_buffer_pool_size=2*1024*1024*1024;')
+
+    # TODO: WRITE CODE HERE
+    print('Adding constraints...')
+    cursor.execute('USE DMA_team%02d;' % team)
+
+    cursor.execute('ALTER TABLE reviews ADD CONSTRAINT FOREIGN KEY (user_id) REFERENCES users(user_id);')
+    print("constraint 1 added")
+
+    cursor.execute('ALTER TABLE reviews ADD CONSTRAINT FOREIGN KEY (business_id) REFERENCES business(business_id);')
+    print("constraint 2 added")
+
+    cursor.execute('ALTER TABLE business_categories ADD CONSTRAINT FOREIGN KEY (business_id) REFERENCES business(business_id);')
+    print("constraint 3 added")
+
+    cursor.execute('ALTER TABLE business_categories ADD CONSTRAINT FOREIGN KEY (category_id) REFERENCES categories(category_id);')
+    print("constraint 4 added")
+
+    cursor.execute('ALTER TABLE business_attributes ADD CONSTRAINT FOREIGN KEY (business_id) REFERENCES business(business_id);')
+    print("constraint 5 added")
+
+    cursor.execute('ALTER TABLE business_attributes ADD CONSTRAINT FOREIGN KEY (attribute_id) REFERENCES attributes(attribute_id);')
+    print("constraint 6 added")
+
+    cursor.execute('ALTER TABLE business_hours ADD CONSTRAINT FOREIGN KEY (business_id) REFERENCES business(business_id);')
+    print("constraint 7 added")
+
+    cursor.execute('ALTER TABLE business_hours ADD CONSTRAINT FOREIGN KEY (day_id) REFERENCES days(day_id);')
+    print("constraint 8 added")
+
+    cursor.execute('ALTER TABLE users_compliments ADD CONSTRAINT FOREIGN KEY (compliment_id) REFERENCES compliments(compliment_id);')
+    print("constraint 9 added")
+
+    cursor.execute('ALTER TABLE users_compliments ADD CONSTRAINT FOREIGN KEY (user_id) REFERENCES users(user_id);')
+    print("constraint 10 added")
+
+    cursor.execute('ALTER TABLE elite ADD CONSTRAINT FOREIGN KEY (user_id) REFERENCES users(user_id);')
+    print("constraint 11 added")
+
+    cursor.execute('ALTER TABLE elite ADD CONSTRAINT FOREIGN KEY (year_id) REFERENCES years(year_id);')
+    print("constraint 12 added")
+
+    cursor.execute('ALTER TABLE tips ADD CONSTRAINT FOREIGN KEY (user_id) REFERENCES users(user_id);')
+    print("constraint 13 added")
+
+    cursor.execute('ALTER TABLE tips ADD CONSTRAINT FOREIGN KEY (business_id) REFERENCES business(business_id);')
+    print("constraint 14 added")
+
+    # TODO: WRITE CODE HERE
+    cursor.close()
+
+
+# TODO: REPLACE THE VALUES OF FOLLOWING VARIABLES
+host = 'localhost'
+user = 'root'
+password = 'kas123123'
+
+requirement1(host=host, user=user, password=password)
+requirement2(host=host, user=user, password=password)
+requirement4(host=host, user=user, password=password)

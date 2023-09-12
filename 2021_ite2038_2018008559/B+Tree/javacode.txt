@@ -1,0 +1,467 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class bptree {
+	static int max_degree;
+	static int min_key; //각 node는 최소 min_key만큼 key를 가져야함
+	static node root = (node) null;
+	static class node{
+		public int m; // # key
+		public boolean isleaf; //leaf or nonleaf
+		public int[] key;
+		public int[] value;
+		public node[] left_child_node;
+		public node rightnode; //leaf면 오른쪽 형제가 저장되고, leaf가 아니면 가장 오른쪽 자식이 저장된다.
+		
+		public node(int k,int v,boolean b){
+			m = 1;
+			isleaf = b;
+			key = new int[max_degree+1];
+			key[0] = k;
+			if(b) {
+				value = new int[max_degree+1];
+				value[0] = v;
+			}
+			else {
+				left_child_node = new node[max_degree+1];
+				for(int i=0; i<max_degree+1; i++) {
+					left_child_node[i] = (node) null;
+				}
+			}
+			rightnode = (node) null;
+		}
+	} 
+	
+	public static void split(node parent,node child){ //if child is full
+	    int pos = max_degree/2;
+	    
+	    node new_node = new node(0,0,child.isleaf);
+	    
+	    child.m = pos;
+
+	    if(child.isleaf){
+	        for(int i=pos; i<max_degree; i++){
+	            new_node.key[i-pos] = child.key[i];
+	            new_node.value[i-pos] = child.value[i];
+	        }
+	        new_node.m = max_degree - pos;
+	        new_node.rightnode = child.rightnode;
+	        child.rightnode = new_node;
+	    }
+	    else{
+	        for(int i=pos+1; i<max_degree; i++){
+	            new_node.key[i-pos-1] = child.key[i];
+	            new_node.left_child_node[i-pos-1] = child.left_child_node[i];
+	        }
+	        new_node.m = max_degree - pos - 1;
+	        new_node.rightnode = child.rightnode;
+	        child.rightnode = child.left_child_node[pos];
+	    }
+
+	    int k = child.key[pos];
+
+	    if(parent == (node) null){ //new root
+	        //새로 생기는 루트는 무조건 non leaf
+	        node new_root = new node(k,0,false);
+	        new_root.left_child_node[0] = child;
+	        new_root.rightnode = new_node;
+	        root = new_root;
+	        return;
+	    }
+
+	    //child가 leaf든 아니든 부모는 무조건 nonleaf
+
+	    if(k > parent.key[parent.m - 1]){
+	        parent.key[parent.m] = child.key[pos];
+	        parent.rightnode = new_node;
+	        parent.left_child_node[parent.m] = child;
+	        parent.m += 1;
+	        return;
+	    }
+
+	    for(int i=parent.m; i>0; i--){
+	        if(k > parent.key[i-1]){
+	            parent.key[i] = child.key[pos];
+	            parent.left_child_node[i] = child;
+	            parent.left_child_node[i+1] = new_node;
+	            parent.m += 1;
+	            return;
+	        }
+	        parent.key[i] = parent.key[i-1];
+	        parent.left_child_node[i] = parent.left_child_node[i-1];
+	    }
+
+	    parent.key[0] = child.key[pos];
+	    parent.left_child_node[0] = child;
+	    parent.left_child_node[1] = new_node;
+	    parent.m += 1;
+	    return;
+	}
+
+	public static node insertion(node T,int k,int v){
+	    if(T.isleaf){
+	        for(int i=T.m; i>0; i--){
+	            if(k > T.key[i-1]){
+	                T.key[i] = k;
+	                T.value[i] = v;
+	                break;
+	            }
+	            T.key[i] = T.key[i-1];
+	            T.value[i] = T.value[i-1];
+	            if(i==1){
+	                T.key[0] = k;
+	                T.value[0] = v;
+	            }
+	        }
+	        T.m += 1;
+	        return T;
+	    }
+	    else{
+	        node next = (node) null;
+	        for(int i=0; i<T.m; i++){
+	            if(k < T.key[i]){
+	                next = T.left_child_node[i];
+	                break;
+	            }
+	        }
+	        if(next == (node) null) next = T.rightnode;
+
+	        next = insertion(next,k,v);
+
+	        if(next.m == max_degree){
+	            split(T,next);
+	        }
+	        return T;
+	    }
+	}
+
+	public static void in(node T,int k,int v){
+	    T = insertion(T,k,v);
+	    if(T.m == max_degree){
+	        split((node) null,T);
+	    }
+	}
+	
+	public static void print(node T){
+	    if(T == (node)null) System.out.println("nothing!!\n");
+	    else{
+	    	System.out.println("size : " + T.m);
+	        if(T.isleaf){
+	        	System.out.println("i am leaf");
+	            for(int i=0; i<T.m; i++){
+	            	System.out.print("key : " + T.key[i] + " value : " + T.value[i] + "   ");
+	            }
+	            System.out.println("");
+	            if(T.rightnode == (node) null) System.out.println("i dont have sibling");
+	            else System.out.println("i have sibling and it starts with " + T.rightnode.key[0]);
+	        }
+	        else{
+	        	System.out.println("i am not leaf");
+	            for(int i=0; i<T.m; i++){
+	            	System.out.print("key : " + T.key[i] + "   ");
+	            }
+	            System.out.println("");
+	            for(int i=0; i<T.m; i++){
+	                print(T.left_child_node[i]);
+	            }
+	            print(T.rightnode);
+	        }
+	    }
+	}
+	
+	public static void serch(node T,int k){
+	    if(T.isleaf){
+	        for(int i=0; i<T.m; i++){
+	            if(T.key[i] == k){
+	            	System.out.println(T.value[i]);
+	                return;
+	            }
+	        }
+	        System.out.println("NOT FOUND");
+	    }
+	    else{
+	        node next = (node) null;
+	        for(int i=0; i<T.m; i++){
+	            if(next == (node) null && k < T.key[i]) next = T.left_child_node[i];
+	            System.out.println(T.key[i] + ",");
+	        }
+	        if(next == (node) null) next = T.rightnode;
+	        serch(next,k);
+	    }
+	}
+
+	public static node findpointer(node T,int k){
+	    if(T.isleaf){
+	        return T;
+	    }
+	    else{
+	        node next = (node) null;
+	        for(int i=0; i<T.m; i++){
+	            if(k < T.key[i]){
+	                next = T.left_child_node[i];
+	                break;
+	            }
+	        }
+	        if(next == (node) null) next = T.rightnode;
+	        return findpointer(next,k);
+	    }
+	}
+
+	public static void range_serch(node T,int x,int y){
+	    node L = findpointer(T,x);
+	    node R = findpointer(T,y);
+
+	    for(int i=0; i<L.m; i++){
+	    	if(x <= L.key[i] && L.key[i] <= y) System.out.println(L.key[i] + "," + L.value[i]);
+	    }
+
+	    if(L == R) return;
+
+	    L = L.rightnode;
+
+	    while(L != R){
+	        for(int i=0; i<L.m; i++){
+	        	System.out.println(L.key[i] + "," + L.value[i]);
+	        }
+	        L = L.rightnode;
+	    }
+
+	    for(int i=0; i<L.m; i++){
+	            if(x <= L.key[i] && L.key[i] <= y) System.out.println(L.key[i] + "," + L.value[i]);
+	    }
+	}
+
+	public static node balance(node parent,node child,int pos){
+	    if(child.m >= min_key) return parent; //굳이 조정 할 필요 없음
+	    if(child.isleaf){
+	        if(pos > 0 && parent.left_child_node[pos-1].m > min_key){ //왼쪽 형제에서 땡겨올수 있음
+	            node sibling = parent.left_child_node[pos-1];
+	            sibling.m -= 1;
+	            for(int i=child.m; i>0; i--){
+	                child.key[i] = child.key[i-1];
+	                child.value[i] = child.value[i-1];
+	            }
+	            child.key[0] = sibling.key[sibling.m];
+	            child.value[0] = sibling.value[sibling.m];
+	            child.m += 1;
+	            parent.key[pos-1] = child.key[0];
+	            return parent;
+	        }
+	        if(pos < parent.m){
+	            node sibling;
+	            if(pos == parent.m - 1) sibling = parent.rightnode;
+	            else sibling = parent.left_child_node[pos+1];
+	            if(sibling.m > min_key){
+	                child.key[child.m] = sibling.key[0];
+	                child.value[child.m] = sibling.value[0];
+	                child.m += 1;
+	                for(int i=1; i<sibling.m; i++){
+	                    sibling.key[i-1] = sibling.key[i];
+	                    sibling.value[i-1] = sibling.value[i];
+	                }
+	                sibling.m -= 1;
+	                parent.key[pos] = sibling.key[0];
+	                return parent;
+	            }
+	        }
+	        //형제들이 모두 거지면 merge해야됨
+	        if(pos > 0){ //왼쪽 형제가 있으면 우선적으로 merge
+	            node sibling = parent.left_child_node[pos-1];
+	            for(int i=0; i<child.m; i++){
+	                sibling.key[sibling.m + i] = child.key[i];
+	                sibling.value[sibling.m + i] = child.value[i];
+	            }
+	            sibling.m += child.m;
+	            sibling.rightnode = child.rightnode;
+	            for(int i=pos; i<parent.m - 1; i++){
+	                parent.key[i] = parent.key[i+1];
+	                parent.left_child_node[i] = parent.left_child_node[i+1];
+	            }
+	            if(sibling.rightnode != (node) null) parent.key[pos - 1] = sibling.rightnode.key[0];
+	            if(pos == parent.m) parent.rightnode = sibling;
+	            parent.m -= 1;
+	            return parent;
+	        }
+	        else{
+	            node sibling;
+	            if(parent.m == 1) sibling = parent.rightnode;
+	            else sibling = parent.left_child_node[1];
+
+	            for(int i=0; i<sibling.m; i++){
+	                child.key[child.m + i] = sibling.key[i];
+	                child.value[child.m + i] = sibling.value[i];
+	            }
+	            child.m += sibling.m;
+	            child.rightnode = sibling.rightnode;
+
+	            for(int i=1; i<parent.m - 1; i++){
+	                parent.key[i] = parent.key[i+1];
+	                parent.left_child_node[i] = parent.left_child_node[i+1];
+	            }
+	            parent.m -= 1;
+	            if(parent.m != 0) parent.key[0] = child.rightnode.key[0];
+	            return parent;
+	        }
+	    }
+	    else{ //부모와 자식 모두 nonleaf
+	        if(pos > 0 && parent.left_child_node[pos-1].m > min_key){ //왼쪽 자식에서 땡겨오기 가능
+	            node sibling = parent.left_child_node[pos-1];
+	            sibling.m -= 1;
+	            for(int i=child.m; i>0; i--){
+	                child.key[i] = child.key[i-1];
+	                child.left_child_node[i] = child.left_child_node[i-1];
+	            }
+	            child.key[0] = parent.key[pos-1];
+	            child.left_child_node[0] = sibling.rightnode;
+	            child.m += 1;
+	            parent.key[pos-1] = sibling.key[sibling.m];
+	            sibling.rightnode = sibling.left_child_node[sibling.m];
+	            return parent;
+	        }
+	        if(pos < parent.m){
+	            node sibling;
+	            if(pos == parent.m - 1) sibling = parent.rightnode;
+	            else sibling = parent.left_child_node[pos+1];
+	            if(sibling.m > min_key){
+	                child.key[child.m] = parent.key[pos];
+	                parent.key[pos] = sibling.key[0];
+	                child.left_child_node[child.m] = child.rightnode;
+	                child.rightnode = sibling.left_child_node[0];
+	                child.m += 1;
+	                sibling.m -= 1;
+	                for(int i=0; i<sibling.m; i++){
+	                    sibling.key[i] = sibling.key[i+1];
+	                    sibling.left_child_node[i] = sibling.left_child_node[i+1];
+	                }
+	                return parent;
+	            }
+	        }
+	        //빌려올수 없으면 merge
+	        if(pos > 0){
+	            node sibling = parent.left_child_node[pos-1];
+	            sibling.key[sibling.m] = parent.key[pos-1];
+	            sibling.left_child_node[sibling.m] = sibling.rightnode;
+	            sibling.m += 1;
+	            for(int i=0; i<child.m; i++){
+	                sibling.key[sibling.m + i] = child.key[i];
+	                sibling.left_child_node[sibling.m + i] = child.left_child_node[i];
+	            }
+	            sibling.m += child.m;
+	            sibling.rightnode = child.rightnode;
+	            parent.key[pos-1] = parent.key[pos];
+	            parent.m -= 1;
+	            for(int i=pos; i<parent.m; i++){
+	                parent.key[i] = parent.key[i+1];
+	                parent.left_child_node[i] = parent.left_child_node[i+1];
+	            }
+	            if(pos > parent.m) parent.rightnode = sibling;
+	            return parent;
+	        }
+	        else{
+	            node sibling;
+	            if(parent.m == 1) sibling = parent.rightnode;
+	            else sibling = parent.left_child_node[1];
+	            child.key[child.m] = parent.key[0];
+	            child.left_child_node[child.m] = child.rightnode;
+	            child.m += 1;
+	            for(int i=0; i<sibling.m; i++){
+	                child.key[child.m + i] = sibling.key[i];
+	                child.left_child_node[child.m + i] = sibling.left_child_node[i];
+	            }
+	            child.m += sibling.m;
+	            child.rightnode = sibling.rightnode;
+	            parent.m -= 1;
+	            if(parent.m == 0) return parent;
+
+	            parent.key[0] = parent.key[1];
+	            for(int i=1; i<parent.m; i++){
+	                parent.key[i] = parent.key[i+1];
+	                parent.left_child_node[i] = parent.left_child_node[i+1];
+	            }
+	            return parent;
+	        }
+	    }
+	}
+
+	public static node deletion(node T,int k){
+	    if(T.isleaf){
+	        boolean isdel = false;
+	        for(int i=0; i<T.m; i++){
+	            if(k == T.key[i]){
+	                for(int j=i+1; j<T.m; j++){
+	                    T.key[j-1] = T.key[j];
+	                    T.value[j-1] = T.value[j];
+	                }
+	                isdel = true;
+	                T.m -= 1;
+	                break;
+	            }
+	        }
+	        if(!isdel) System.out.println("deletion failed : no key");
+	        return T;
+	    }
+	    else{
+	        node next = (node) null;
+	        int pos = T.m;
+	        for(int i=0; i<T.m; i++){
+	            if(k < T.key[i]){
+	                next = T.left_child_node[i];
+	                pos = i;
+	                break;
+	            }
+	        }
+	        if(next == (node) null) next = T.rightnode;
+
+	        next = deletion(next,k);
+
+	        balance(T,next,pos);
+
+	        return T;
+	    }
+	}
+
+	public static void change(node T,node nl,int pos,int k){
+	    if(T.isleaf){
+	        if(nl != (node) null) nl.key[pos] = T.key[0];
+	        return;
+	    }
+	    else{
+	        node next = (node) null;
+	        for(int i=0; i<T.m; i++){
+	            if(nl == (node) null && k == T.key[i]){
+	                nl = T;
+	                pos = i;
+	            }
+	            if(k < T.key[i]){
+	                next = T.left_child_node[i];
+	                break;
+	            }
+	        }
+	        if(next == (node) null) next = T.rightnode;
+	        change(next,nl,pos,k);
+	    }
+	}
+
+	public static node del(node T,int k){
+	    T = deletion(T,k);
+	    if(T.m == 0 && !T.isleaf) T = T.left_child_node[0];
+	    change(T,(node) null,0,k);
+	    return T;
+	}
+	
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        max_degree = Integer.parseInt(br.readLine());
+        min_key = (max_degree-1)/2;
+        
+        while(true) {
+        	String str = br.readLine();
+        	String[] bae = str.split(" ");
+        	int k = Integer.parseInt(bae[0]);
+        	int v = Integer.parseInt(bae[1]);
+        	if(root == (node) null) root = new node(k,v,true);
+        	else in(root,k,v);
+        	print(root);
+        }
+    }
+}
