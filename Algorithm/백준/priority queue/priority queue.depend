@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1619168233 source:c:\users\kas12\onedrive\바탕 화면\백준\priority queue\main.cpp
+	<iostream>
+	<vector>
+	<utility>
+	<queue>
+
