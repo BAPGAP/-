@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1659605242 source:c:\users\kas12\onedrive\바탕 화면\백준\ecc testing with ironmask\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<vector>
+	<cmath>
+	<random>
+	<algorithm>
+
