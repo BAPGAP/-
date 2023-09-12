@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1626812287 source:c:\users\kas12\onedrive\바탕 화면\종만북\곱해서 가까운 수 만들기\main.cpp
+	<cstdlib>
+	<vector>
+	<algorithm>
+	<cstdio>
+

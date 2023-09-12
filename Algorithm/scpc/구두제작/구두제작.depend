@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1624980050 source:c:\users\kas12\onedrive\바탕 화면\scpc\구두제작\main.cpp
+	<iostream>
+	<vector>
+	<algorithm>
+
