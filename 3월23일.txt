@@ -1,7 +1,0 @@
-연비가 좋다 : cost efficient 효율
-effectiveness
-
-develpment set : training 중 train set의 과적합 방지
-test set : training이 끝나고 성능 검증
-
-weight decay : 경계 완만하게 바꿔줌
