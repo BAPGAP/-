@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1628922082 source:c:\users\kas12\onedrive\바탕 화면\백준\1번부터\17783\main.cpp
+	<iostream>
+	<vector>
+	<algorithm>
+	<cmath>
+
