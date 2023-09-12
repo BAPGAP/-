@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1625603378 source:c:\users\kas12\onedrive\바탕 화면\scpc\범위안의 숫자\main.cpp
+	<iostream>
+	<string>
+	<vector>
+	<utility>
+	<algorithm>
+	<string.h>
+	<stdio.h>
+
