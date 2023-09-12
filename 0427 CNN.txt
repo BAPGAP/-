@@ -1,0 +1,20 @@
+차원이 너무 커서 FCN으로는 불가능하다 -> CNN
+Full connected network, convolutional neuron network
+
+Horizontal edge 1 1 1, 0 0 0, -1 -1 -1
+10 -> 0인 edge는 + , 0 -> 10인 edge는 -
+edge만 찾으려면 절댓값 쓰면됨
+
+필터도 학습을 하자!
+
+Padding : n*n에 filter 적용해도 n*n유지할수있도록 원본에 padding
+
+Stride : 몇번 건너 뛸건지 (필터가 매번 몇칸 이동할지?)
+
+learnerble weight parameter 몇개입니까?
+(5*5*10)*20 + 20 bias 더해야됨
+
+parameter sharing : 다른 이미지 비교해도 어차피 사람 
+얼굴 찾는 거는 똑같아서 동일한 필터 사용 가능
+
+Sparsity of connections : FCN보다 parametet 적음

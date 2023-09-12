@@ -1,0 +1,4 @@
+logistic regression = 1 layer NN
+b는 broadcasting된다
+2 layered Neural Network by gradient descent 26페이지 그림설명
+linear activation fuction은 model을 linear fuction으로 만든다
