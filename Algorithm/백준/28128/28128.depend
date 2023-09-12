@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1693890559 source:c:\users\kas12\onedrive\바탕 화면\한양대\calab\28128\main.cpp
+	<iostream>
+	<string>
+	<string>
+	<vector>
+	<map>
+	<algorithm>
+
